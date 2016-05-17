@@ -31,8 +31,9 @@ public class Clustering {
     static LinkedHashMap<String, DNASequence> total=new LinkedHashMap<>();
     static int grupos=0;
     static LinkedHashMap<Integer,Integer> datos=new LinkedHashMap<>();
-    public void cluster(String ruta) throws IOException, CompoundNotFoundException
+    public void cluster(String ruta,String url) throws IOException, CompoundNotFoundException
     {
+        io.setUrl(url);
         Clustering cl= new Clustering();
         int i=0;
         boolean similar;

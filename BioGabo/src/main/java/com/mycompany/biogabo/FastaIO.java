@@ -22,9 +22,23 @@ import org.biojava.nbio.core.sequence.io.FastaReaderHelper;
  * @author morelos
  */
 public class FastaIO {
-    private final String url="/var/www/html/Gabo/";
+    private String url;
     private LinkedHashMap<String, DNASequence> a;
 
+    public FastaIO() {
+        this.url = "";
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    
+    
     public LinkedHashMap<String, DNASequence> readFasta(String ruta,int tipo) throws IOException, CompoundNotFoundException {                 
         
     try {
