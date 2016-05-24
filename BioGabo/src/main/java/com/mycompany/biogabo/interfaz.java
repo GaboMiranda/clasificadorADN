@@ -133,12 +133,20 @@ public class interfaz extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEntrenarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEntrenarMouseClicked
+        /*botón de entrenar, se debe poner la url y nombre del arvhivo fasta 
+        del cual se obtendrán las lecturas de las secuencias */
+        
         if(txtArchivo.getText().compareTo("")==0){
             JOptionPane.showMessageDialog(null,"Debes poner el nombre del archivo");
         }else{
+            //Se crea una instancia de la clase cluster
             Clustering cluster= new Clustering();
             try {
+                //se llama al método cluster de la clase clustering enviandole la 
+                //url y nombre del archivo para comenzar con el proceso de agrupamiento
                 cluster.cluster(txtArchivo.getText(),txtUrl.getText());
+               //Cuando se ha realizad un entrenamiento se habilitan las 
+                //opciones de realizar un agrupamiento de una secuencia nueva
                 txtSecuencia.setVisible(true);
                 btnClasificar.setVisible(true);
                 lblSecuencia.setVisible(true);

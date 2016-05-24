@@ -4,18 +4,15 @@
  * and open the template in the editor.
  */
 package com.mycompany.biogabo;
-import java.io.IOException;
-import java.util.Scanner;
-
-import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 /**
  *
  * @author morelos
  */
 public class Principal 
 {
-    public  static void main(String[] args) throws IOException, CompoundNotFoundException 
+    public  static void main(String[] args) 
     {
+        //Se crea una instancia del formulario para la interfaz gráfica y se muestra
         interfaz in = new interfaz();
         in.setVisible(true);
     }

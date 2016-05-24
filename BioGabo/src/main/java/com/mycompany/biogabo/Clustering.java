@@ -31,6 +31,7 @@ public class Clustering {
     static LinkedHashMap<String, DNASequence> total=new LinkedHashMap<>();
     static int grupos=0;
     static LinkedHashMap<Integer,Integer> datos=new LinkedHashMap<>();
+   
     public void cluster(String ruta,String url) throws IOException, CompoundNotFoundException
     {
         io.setUrl(url);
@@ -41,12 +42,22 @@ public class Clustering {
         String s22;
         DNASequence s1;
         DNASequence s2;
+        //se realiza la llamada al metodo readFasta de la clase io enviando 
+        //la ruta del archivo fasta y devuelve un objeto de tipo LinkedHashMap 
+        //con un string como llave y un DNASequence que contiene todas las 
+        //lecturas encontradas en el Archivo Fasta.
         LinkedHashMap<String, DNASequence> a=io.readFasta(ruta,1);
         Iterator<String> it = a.keySet().iterator();
+        //se reccorre el contenido del LinkedHashMap mientras contenga 
+        //un siguiente registro.
             while(it.hasNext())
             {                
                 if(i<1)
                 {
+                    //Si es la primer iteración se realiza una segunda lectura
+                    //para obtener la siguiente secuencia y poder alinear las dos secuecias
+                    //si son alineadas con el porcentaje minimo requerido se agrupan 
+                    //de lo contrario se cran dos grupos.
                     String query= it.next();
                     String target=it.next();
                     s1= a.get(query);
@@ -61,6 +72,12 @@ public class Clustering {
                 }
                 else
                 {
+                //En caso de que ya sea la segunda iteración ya tenemos al menos
+                //un grupo para comprarar la nueva secuencia y se alinea con las
+                //secuencias pertenecientes de cada uno de los grupos existentes,
+                //si cumple con los parametros establecidos en el alineamiento con 
+                //alguno de los grupos se queda en dicho grupo y en caso de no 
+                //cumplirse con ningún grupo se crea un grupo nuevo.
                     String query = it.next();
                     s1= a.get(query);
                     s11 = s1.toString();
@@ -77,6 +94,7 @@ public class Clustering {
     
     public boolean alignment (String query, String target) throws CompoundNotFoundException
     {
+        //método encargado de realizar un alineamiento entre dos secuencias
         GapPenalty penalty = new SimpleGapPenalty( -20, -5);
         PairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = Alignments.getPairwiseAligner(
         new DNASequence(query, AmbiguityDNACompoundSet.getDNACompoundSet()),
@@ -86,17 +104,20 @@ public class Clustering {
         SequencePair<DNASequence, NucleotideCompound>
         alignment = aligner.getPair();
         int identical = alignment.getNumIdenticals();
+        /*Devuelve un booleano que cuya condición es que la similitud entre 
+        target y query sean de al menos .97 y también que la similitud entre 
+                query y target sea de igual manera de minimo de .97*/
         return identical / (float) target.length()>=.97 && identical / (float) query.length()>=.97;
     }
     
     public void crearGrupos(DNASequence query, DNASequence target,boolean similar) throws CompoundNotFoundException
     {
         Clustering cl= new Clustering();
-        
         if(grupo.isEmpty())
-        {
+        { //Si grupo no está inicializado, es en caso de que se necesite crear 
+            //el primer grupo o los primeros dos grupos 
             if (similar)
-            {
+            {//Si las dos primeras secuncias son similares simplemente se crea un grupo
                 grupo.put(query.getOriginalHeader(),query);
                 query.setOriginalHeader(query.getOriginalHeader()+".G1");
                 target.setOriginalHeader(target.getOriginalHeader()+".G1");
@@ -106,7 +127,7 @@ public class Clustering {
                 grupos++;
             }
             else
-            {
+            {//En caso de que sean diferentes las dos primeras seceuncias se crean dos grupos
                 grupo.put(query.getOriginalHeader(),query);
                 grupo.put(target.getOriginalHeader(),target);
                 query.setOriginalHeader(query.getOriginalHeader()+".G1");
@@ -119,7 +140,10 @@ public class Clustering {
             }
         }
         else
-        {
+        {//Una vez que ya se ha realizado al menos el primer grupo y se alinea 
+            /*con la lectura de la secuencia nueva se determina y se agrega en 
+            el grupo correspondiente o se crea un nuevo gruupo en caso de no 
+                    pertenecer a ningún grupo previamente creado*/
             Iterator<String> it = grupo.keySet().iterator();
             while(it.hasNext())
             {
@@ -154,6 +178,7 @@ public class Clustering {
     
     public void mostrarLista(LinkedHashMap<String, DNASequence> lista)
     {
+        //método encargado de recorrer e imprimir en consola el contenido del LinkedHashMap
         Iterator<String> it = lista.keySet().iterator();
             while(it.hasNext())
             {
